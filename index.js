@@ -27,7 +27,10 @@ Log.prototype = {
   constructor: Log,
   start (fn) {
     this.stop()
-    this.timer = setInterval(() => this.log(fn(chalk[this.color](this.frames[this.index++ % this.frames.length]))), this.speed)
+    const _ = () => this.log(fn(chalk[this.color](this.frames[this.index++ % this.frames.length])))
+    // 立即显示
+    _()
+    this.timer = setInterval(_, this.speed)
   },
 
   stop (clear) {

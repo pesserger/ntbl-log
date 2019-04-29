@@ -1,8 +1,11 @@
 # log
 
-一个内置进度动画的命令行文本输入工具。
+一个内置进度动画的命令行文本输出工具。
 
 [![GitHub](https://img.shields.io/badge/GitHub-yeshimei-green.svg)](https://github.com/yeshimei/ntbl-log.git) [![npm](https://img.shields.io/npm/v/@ntbl/log.svg)](https://www.npmjs.com/package/@ntbl/log) [![MIT](https://img.shields.io/npm/l/express.svg)](https://github.com/yeshimei/ntbl-log.git)
+
+
+![](https://github.com/yeshimei/ntbl-log/blob/master/images/a.gif?raw=true)
 
 # Installation
 

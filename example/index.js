@@ -1,7 +1,7 @@
 const Log = require('../index')
 const log = Log({
   name: 'dots',
-  speed: 80,
+  interval: 80,
   color: 'green'
 })
 

@@ -20,7 +20,7 @@ const Log = require('@ntbl/log')
 
 const log = Log({
   name: 'dots',   // 动画类型
-  speed: 80,   // 动画速度
+  interval: 80,   // 循环时间
   color: 'green'  // 
 })
 

@@ -18,7 +18,7 @@ function Log(options = {}) {
   this.color = options.color || 'green'
   this.spinner = cliSpinners[this.name]
   this.frames = this.spinner.frames
-  this.speed = options.speed || this.spinner.interval
+  this.interval = options.interval || this.spinner.interval
   this.index = 0
   this.timer = null
 }
@@ -30,7 +30,7 @@ Log.prototype = {
     const _ = () => this.log(fn(chalk[this.color](this.frames[this.index++ % this.frames.length])))
     // 立即显示
     _()
-    this.timer = setInterval(_, this.speed)
+    this.timer = setInterval(_, this.interval)
   },
 
   stop (clear) {

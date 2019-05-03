@@ -5,6 +5,7 @@ const chalk = require('chalk')
 module.exports = Log
 
 
+
 function Log(options = {}) {
   if (!(this instanceof Log)) return new Log(options)
 
@@ -17,34 +18,76 @@ function Log(options = {}) {
   this.name = options.name || 'dots'
   this.color = options.color || 'green'
   this.spinner = cliSpinners[this.name]
-  this.frames = this.spinner.frames
   this.interval = options.interval || this.spinner.interval
   this.index = 0
   this.timer = null
+  this.options = {}
+  this._nextSave = null
+
 }
 
 Log.prototype = {
   constructor: Log,
-  start (fn) {
-    this.stop()
-    const _ = () => this.log(fn({
-      frame: chalk[this.color](this.frames[this.index++ % this.frames.length])
+
+  _interval () {
+    const {text, name = this.name, interval = this.interval, color = this.color} = this.options
+    const frames = cliSpinners[name].frames
+    const _ = () => this.log(text({
+      frame: chalk[color](frames[this.index++ % frames.length])
     }))
-    // 立即显示
+
+    // 先马上显示
     _()
-    this.timer = setInterval(_, this.interval)
+
+    this.timer = setInterval(_, interval)
   },
 
-  stop (clear) {
+
+  start (options) {
+    if (typeof options === 'string' || options.text === 'string')  return this.log(options)
+    if (typeof options === 'function')  {
+      this.options = {
+        text: options
+      }
+    } else {
+      this.options = options
+    }
+
+    if (!this.timer) this._interval()
+  },
+
+  stop (save) {
     clearInterval(this.timer)
-    if (!clear) this.clear()
+    this.timer = null
+    save ? this.done () : this.clear()
   },
 
   clear () {
     logUpdate.clear()
   },
 
+  done () {
+    logUpdate.done()
+  },
+
   log (text) {
     logUpdate(text)
+  },
+
+  register (name, states) {
+    const log = this[name] = {}
+    for (let key in states) {
+      let options = states[key]
+
+      log[key] = function (save) {
+        if (this._nextSave !== null) {
+          this.stop(this._nextSave)
+        }
+        this._nextSave = save
+        this.start(options)
+      }.bind(this)
+    }
   }
 }
+
+

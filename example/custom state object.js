@@ -2,8 +2,12 @@ const log = require('../index')()
 
 // 在实例化之前，注册一个消息
 log.register('request', {
-  // 你可以自定义你的任何状态
-  downloading: data => `${data.frame} downloading data from a remote server`,
+  downloading: {
+    name: 'earth',   // 使用 flip 动画
+    interval: 50,   // 更快一些
+    color: 'red',  // 红色！
+    text: data => `${data.frame} downloading data from a remote server`
+  },
   completed: '√ download completed',
 })
 

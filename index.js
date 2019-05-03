@@ -30,10 +30,11 @@ Log.prototype = {
   constructor: Log,
 
   _interval () {
-    const {text, name = this.name, interval = this.interval, color = this.color} = this.options
+    const {args, text, name = this.name, interval = this.interval, color = this.color} = this.options
     const frames = cliSpinners[name].frames
     const _ = () => this.log(text({
-      frame: chalk[color](frames[this.index++ % frames.length])
+      frame: chalk[color](frames[this.index++ % frames.length]),
+      args
     }))
 
     // 先马上显示
@@ -43,13 +44,15 @@ Log.prototype = {
   },
 
 
-  start (options) {
+  start (options, ...args) {
     if (typeof options === 'string' || options.text === 'string')  return this.log(options)
     if (typeof options === 'function')  {
       this.options = {
-        text: options
+        args,
+        text: options,
       }
     } else {
+      options.args = args
       this.options = options
     }
 
@@ -79,12 +82,13 @@ Log.prototype = {
     for (let key in states) {
       let options = states[key]
 
-      log[key] = function (save) {
+      log[key] = function (...args) {
+        // 延迟到下次状态
         if (this._nextSave !== null) {
           this.stop(this._nextSave)
         }
-        this._nextSave = save
-        this.start(options)
+        this._nextSave = options.clear
+        this.start(options, ...args)
       }.bind(this)
     }
   }

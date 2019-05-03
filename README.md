@@ -31,13 +31,18 @@ log.start(data => `${data.frame} downloading data from a remote server`)
 
 // 两秒后，停止并清除它
 setTimeout(() => log.stop(), 2000)
-
-// 或者,默认保留动画最后一帧
-setTimeout(() => log.stop(true), 2000)
 ```
 
 
 ![](https://github.com/yeshimei/ntbl-log/blob/master/images/b.gif?raw=true)
+
+```js
+// 或者,保留动画最后一帧
+setTimeout(() => log.stop(true), 2000)
+```
+
+![](https://github.com/yeshimei/ntbl-log/blob/master/images/d.gif?raw=true)
+
 
 ```js
 // 在同一行打印文本
@@ -58,7 +63,7 @@ log 内置了所有 [cli-spinners](https://github.com/sindresorhus/cli-spinners)
 Log('dots')
 // 或者
 Log({
-  name: 'flip'
+  name: 'earth'
 })
 ```
 
@@ -74,7 +79,6 @@ log.register('request', {
   // 你可以自定义你的任何状态
   downloading: data => `${data.frame} downloading data from a remote server`,
   completed: '√ download completed',
-  failed: '× download failed'
 })
 
 
@@ -91,17 +95,16 @@ setTimeout(() => log.request.completed(), 2000)
 
 ```js
 Log.register('request', {
-  // 你可以自定义你的任何状态
   downloading: {
-    name: 'flip',   // 使用 flip 动画
+    name: 'earth',   // 使用 earth 动画
     interval: 50,   // 更快一些
-    color: 'gray',  // 灰色！
+    color: 'red',  // 红色！
     text: data => `${data.frame} downloading data from a remote server`
   }
 })
 ```
 
-
+![](https://github.com/yeshimei/ntbl-log/blob/master/images/f.gif?raw=true)
 
 
 默认情况下，当你更换状态时内部会使用 `log.stop()`  停止并清除**上一个状态的消息**。如果你需要保留它，你可以这么做。
@@ -110,14 +113,18 @@ Log.register('request', {
 const log = require('@ntbl/log')()
 
 log.register('request', {
-  hello: '（￣︶￣）↗ Hello World！',
+  hello: {
+    text: '（￣︶￣）↗ Hello World！',
+    // 开启保留
+    save: true,
+  },
   downloading:  data => `${data.frame} downloading data from a remote server`,
   completed: '√ download completed',
 })
 
 
 // 状态更换后，保留这条消息
-log.request.hello(true)
+log.request.hello()
 setTimeout(() => log.request.downloading(), 500)
 // 这一条也会被保留
 // 因为状态会一直被持续
@@ -125,3 +132,23 @@ setTimeout(() => log.request.completed(), 2000)
 ```
 
 ![](https://github.com/yeshimei/ntbl-log/blob/master/images/a.gif?raw=true)
+
+
+如果，你的消息是动态生成的，你还可以传入参数。
+
+```js
+const log = require('@ntbl/log')()
+
+log.register('request', {
+  // 传入的参数都会保存在 args 中
+  downloading:  data => `${data.frame} downloading from ${data.args[0]} data from a remote server`,
+  completed: '√ download completed',
+})
+
+
+
+log.request.downloading('www.baidu.com')
+setTimeout(() => log.request.completed(), 2000)
+```
+
+![](https://github.com/yeshimei/ntbl-log/blob/master/images/e.gif?raw=true)

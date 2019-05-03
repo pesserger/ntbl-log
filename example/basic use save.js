@@ -10,5 +10,5 @@ const log = Log({
 // 开始
 log.start(data => `${data.frame} downloading data from a remote server`)
 
-// 两秒后，停止并清除它
-setTimeout(() => log.stop(), 2000)
+// 或者,保留动画最后一帧
+setTimeout(() => log.stop(true), 2000)

@@ -37,7 +37,7 @@ Log.prototype = {
 
   stop (clear) {
     clearInterval(this.timer)
-    if (clear) this.clear()
+    if (!clear) this.clear()
   },
 
   clear () {
